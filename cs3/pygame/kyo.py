@@ -8,13 +8,16 @@ DISPLAYSURF = pygame.display.set_mode((800, 500))
 
 pygame.display.set_caption("Hello Pygame !!")
 
-surface = pygame.Surface((150, 105))
+surface = pygame.Surface((150, 105),pygame.SRCALPHA)
 
 time = 5
 timeSkip = 0
 option = 0
 x = 0
 y = 400
+
+high = 20
+jump=False
 
 url="./pygame/img/kyo.png"
 
@@ -42,7 +45,7 @@ while True:
 
         if event.type == KEYDOWN:
             if event.key == K_UP:
-                y -= 150
+                jump = True
             if event.key == K_DOWN:
                 y += 150
             if event.key == K_LEFT:
@@ -63,6 +66,14 @@ while True:
         timeSkip += 1
         x+=5
         url="./pygame/img/kyo.png"
+
+    if jump:
+        if high >= -20:
+            y -= high
+            high -= 1
+        else:   
+            jump=False
+            high=20 
 
     DISPLAYSURF.fill((255, 255, 255))  # Red Green Blue
 
