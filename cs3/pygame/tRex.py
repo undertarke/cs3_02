@@ -8,42 +8,44 @@ DISPLAYSURF = pygame.display.set_mode((800, 500))
 
 pygame.display.set_caption("Hello Pygame !!")
 
+
 class TRex():
-    def __init__(self):
-        self.x = 20
-        self.y = 360
-        self.surface = pygame.Surface((55, 43),pygame.SRCALPHA)
-        self.surface.blit(pygame.image.load("./pygame/img/tRex.png"), (0,0), (80, 0, 40, 43))
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.surface = pygame.Surface((55, 43), pygame.SRCALPHA)
+        self.surface.blit(pygame.image.load(
+            "./pygame/img/tRex.png"), (0, 0), (80, 0, 40, 43))
         self.option = 2
 
-        self.timeSkip= 0
-        self.time=5
+        self.timeSkip = 0
+        self.time = 5
 
         self.jump = False
         self.high = 20
 
+        self.rect = self.surface.get_rect(topleft=(x, y))
+
     def update(self, left, right, down, up):
-        self.surface.fill((0,0,0,0))
+        self.surface.fill((0, 0, 0, 0))
+
         if up:
             self.jump = True
-        else:
-            self.jump = False
-            
+
         if self.jump:
             if self.high >= -20:
                 self.y -= self.high
                 self.high -= 1
-            else:   
-                self.jump=False
-                self.high=20 
-                
+            else:
+                self.jump = False
+                self.high = 20
 
         if down:
             if self.timeSkip <= self.time:  # 0 - 5
                 self.option = 4
             elif self.timeSkip <= self.time*2:  # 6 - 10
                 self.option = 5
-           
+
         else:
             if self.timeSkip <= self.time:  # 0 - 5
                 self.option = 0
@@ -51,7 +53,7 @@ class TRex():
                 self.option = 1
 
         if self.timeSkip > self.time*2:
-                self.timeSkip = 0
+            self.timeSkip = 0
 
         if left:
             self.x -= 2
@@ -63,7 +65,6 @@ class TRex():
         # if down:
         #     self.option= 4
 
-        
         self.animate()
 
     def draw(self):
@@ -71,25 +72,35 @@ class TRex():
 
     def animate(self):
         if self.option == 0:
-            self.surface.blit(pygame.image.load("./pygame/img/tRex.png"), (0,0),(0, 0, 40, 43))
+            self.surface.blit(pygame.image.load(
+                "./pygame/img/tRex.png"), (0, 0), (0, 0, 40, 43))
         if self.option == 1:
-            self.surface.blit(pygame.image.load("./pygame/img/tRex.png"),(0,0),(40, 0, 40, 43))
+            self.surface.blit(pygame.image.load(
+                "./pygame/img/tRex.png"), (0, 0), (40, 0, 40, 43))
         if self.option == 2:
-            self.surface.blit(pygame.image.load("./pygame/img/tRex.png"),(0,0),(80, 0, 40, 43))
+            self.surface.blit(pygame.image.load(
+                "./pygame/img/tRex.png"), (0, 0), (80, 0, 40, 43))
         if self.option == 3:
-            self.surface.blit(pygame.image.load("./pygame/img/tRex.png"),(0,0), (120, 0, 40, 43))
+            self.surface.blit(pygame.image.load(
+                "./pygame/img/tRex.png"), (0, 0), (120, 0, 40, 43))
         if self.option == 4:
-            self.surface.blit(pygame.image.load("./pygame/img/tRex.png"),(0,0), (160, 0, 55, 43))
+            self.surface.blit(pygame.image.load(
+                "./pygame/img/tRex.png"), (0, 0), (160, 0, 55, 43))
         if self.option == 5:
-            self.surface.blit(pygame.image.load("./pygame/img/tRex.png"),(0,0), (215, 0, 55, 43))
-       
+            self.surface.blit(pygame.image.load(
+                "./pygame/img/tRex.png"), (0, 0), (215, 0, 55, 43))
+
+    def updateRect(self):
+        self.rect.topleft = (self.x, self.y)
+
+
 class Ground():
     def __init__(self):
         self.x = 0
         self.y = 400
         self.surface = pygame.Surface((1200, 12), pygame.SRCALPHA)
-        self.surface.blit(pygame.image.load("./pygame/img/ground.png"), (0, 0, 1200, 12))
-
+        self.surface.blit(pygame.image.load(
+            "./pygame/img/ground.png"), (0, 0, 1200, 12))
 
     def draw(self):
         DISPLAYSURF.blit(self.surface, (self.x, self.y))
@@ -97,7 +108,8 @@ class Ground():
 
 def main():
     ground = Ground()
-    tRex = TRex()
+    tRex = TRex(20, 360)
+    tRex2 = TRex(400, 360)
     up, down, left, right = False, False, False, False
     while True:
         for event in pygame.event.get():
@@ -125,12 +137,21 @@ def main():
                     right = False
 
         DISPLAYSURF.fill((255, 255, 255))
-    
-        ground.draw()
-        tRex.draw()
-  
 
-        tRex.update(left,right,down, up)
+        ground.draw()
+
+        tRex.draw()
+        tRex.updateRect()
+
+        tRex2.draw()
+        tRex2.updateRect()
+
+        if tRex.rect.colliderect(tRex2.rect):
+            print("va chạm")
+        else:
+            print("không va chạm")
+
+        tRex.update(left, right, down, up)
 
         pygame.display.update()
         pygame.time.Clock().tick(60)
