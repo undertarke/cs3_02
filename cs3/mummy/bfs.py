@@ -37,10 +37,6 @@ class Graph:
             path = queue.popleft()
             current = path[-1]
 
-            # Dừng khi tất cả các đường đi đã dài hơn đường đi ngắn nhất
-            # if min_length is not None and len(path) > min_length:
-            #     break
-
             for neighbor in self.adjList[current]:
                 if neighbor in visited and (min_length is not None and len(path) >= min_length):
                     continue
@@ -51,6 +47,7 @@ class Graph:
                 if neighbor == end:
                     # shortest_paths.append(new_path)
                     shortest_paths.append(new_path[1]) # for game
+
                     min_length = len(new_path)
                 else:
                     queue.append(new_path)
@@ -66,10 +63,9 @@ class Graph:
 graph = Graph(6, 6)
 graph.addRectangleEdges()
 
-start_point = 16
-end_point = 15
+start_point = 35
+end_point = 1
 
 # Gọi hàm và in ra tất cả các đường đi ngắn nhất
 paths = graph.findAllShortestPaths(start_point, end_point)
 
-print(paths)
